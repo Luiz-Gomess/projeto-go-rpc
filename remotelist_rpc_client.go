@@ -36,6 +36,7 @@ func main() {
 	} else {
 		fmt.Println("Elemento retirado:", reply_i)
 	}
+	
 	err = client.Call("RemoteList.Remove", 0, &reply_i)
 	if err != nil {
 		fmt.Print("Error:", err)
