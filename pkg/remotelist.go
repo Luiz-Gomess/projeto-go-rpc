@@ -42,6 +42,8 @@ func (rl *RemoteList) Append(args AppendArgs, reply *bool) error {
 
 	rl.listsMap[args.ListId] = append(rl.listsMap[args.ListId], args.Value)
 	*reply = true
+
+	RegisterLog("Append", args.ListId, args.Value)
 	return nil
 }
 
@@ -75,6 +77,7 @@ func (rl *RemoteList) Remove(listId int, reply_i *int) error {
 	rl.listsMap[listId] = list[:lastIndex]
 	*reply_i = val
 
+	RegisterLog("Remove", listId, " ")
 	return nil
 }
 

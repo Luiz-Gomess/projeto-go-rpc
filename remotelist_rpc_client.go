@@ -21,7 +21,7 @@ func main() {
 	err = client.Call("RemoteList.Append", pkg.AppendArgs{ListId: 3, Value: 40}, &reply)
 	err = client.Call("RemoteList.Append", pkg.AppendArgs{ListId: 3, Value: 50}, &reply)
 
-	fmt.Println("Tamanho da lista 1: ")
+	fmt.Println("Lista 1 índice 1: ")
 	err = client.Call("RemoteList.Get", pkg.GetArgs{ListId: 1, Index: 1}, &reply_i)
 	fmt.Println(reply_i)
 
@@ -30,14 +30,14 @@ func main() {
 	err = client.Call("RemoteList.Size", 3, &reply_i)
 	fmt.Println(reply_i)
 
-	err = client.Call("RemoteList.Remove", 0, &reply_i)
+	err = client.Call("RemoteList.Remove", 1, &reply_i)
 	if err != nil {
 		fmt.Print("Error:", err)
 	} else {
 		fmt.Println("Elemento retirado:", reply_i)
 	}
-	
-	err = client.Call("RemoteList.Remove", 0, &reply_i)
+
+	err = client.Call("RemoteList.Remove", 2, &reply_i)
 	if err != nil {
 		fmt.Print("Error:", err)
 	} else {
