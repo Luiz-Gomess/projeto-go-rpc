@@ -5,6 +5,7 @@ import (
 	"ifpb/remotelist/pkg"
 	"net"
 	"net/rpc"
+
 	"github.com/carlescere/scheduler"
 )
 
@@ -23,13 +24,13 @@ func main() {
 
 	pkg.LoadData(list)
 
-	_, err := scheduler.Every(10).Seconds().Run(func() {
+	_, err := scheduler.Every(1).Minutes().Run(func() {
 		pkg.Snapshot(list)
 	})
 
 	if err != nil {
-        panic(err)
-    }
+		panic(err)
+	}
 
 	for {
 		conn, err := l.Accept()

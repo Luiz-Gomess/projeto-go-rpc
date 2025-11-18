@@ -1,10 +1,13 @@
 package pkg
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -47,14 +50,50 @@ func LoadData(rl *RemoteList) {
 		return
 	}
 
-	fmt.Println("Content loaded")
-	fmt.Println(rl.listsMap[1])
+	fmt.Println("Content loaded!")
+	fmt.Println("Loading Operations...")
 
+	loadLogOperations(rl)
+
+}
+
+func loadLogOperations(rl *RemoteList) {
+	file, err := os.Open(logs)
+	if err != nil {
+		fmt.Printf("Error opening file: %v\n", err)
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		args := strings.Split(line, " ")
+
+		listId, _ := strconv.Atoi(args[1])
+
+		if args[0] == "Append" {
+			value, _ := strconv.Atoi(args[2])
+			rl.listsMap[listId] = append(rl.listsMap[listId], value)
+
+		} else if args[0] == "Remove" {
+			list, _ := rl.getList(listId)
+			lastIndex := len(list) - 1
+			rl.listsMap[listId] = list[:lastIndex]
+		} else {
+			fmt.Println("Stopped!!")
+			break
+		}
+
+	}
+	fmt.Println("It worked!!")
+	fmt.Println(rl.listsMap[1])
 }
 
 func RegisterLog(operation string, listId int, value any) {
 
-	line := fmt.Sprintf("%s %d %d \n", operation, listId, value)
+	line := fmt.Sprintf("%s %d %v \n", operation, listId, value)
 
 	file, err := os.OpenFile(logs, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
