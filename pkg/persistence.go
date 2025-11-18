@@ -30,6 +30,7 @@ func Snapshot(rl *RemoteList) {
 	fmt.Println("Snapshot created at ", time.Now())
 }
 
+// Recupera os dados das listas salvos no snapshot.json e em seguida os dados em logs.txt
 func LoadData(rl *RemoteList) {
 	jsonFile, err := os.Open(snapshotFile)
 	if err != nil {
@@ -55,8 +56,11 @@ func LoadData(rl *RemoteList) {
 
 	loadLogOperations(rl)
 
+	//TODO: Limpar o arquivo de logs após as operações já terem sido executadas
+
 }
 
+// Executa as operações salvas no arquivos de logs para recriar o estado das listas
 func loadLogOperations(rl *RemoteList) {
 	file, err := os.Open(logs)
 	if err != nil {
@@ -72,6 +76,10 @@ func loadLogOperations(rl *RemoteList) {
 		args := strings.Split(line, " ")
 
 		listId, _ := strconv.Atoi(args[1])
+
+		// args[0] -> Operação
+		// args[1] -> Id da lista
+		// args[2] -> Valor numérico (Ausente quando a operação é 'Remove') 
 
 		if args[0] == "Append" {
 			value, _ := strconv.Atoi(args[2])
@@ -89,8 +97,15 @@ func loadLogOperations(rl *RemoteList) {
 	}
 	fmt.Println("It worked!!")
 	fmt.Println(rl.listsMap[1])
+
 }
 
+
+/* Registra operação executada em um arquivo de log
+	- operation: "Append" ou "Remove"
+	- listId: Id da lista que foi modificada
+	- value: Valor da operação. Obs.: Deve ser do tipo "int" ou "nil"
+*/
 func RegisterLog(operation string, listId int, value any) {
 
 	line := fmt.Sprintf("%s %d %v \n", operation, listId, value)
