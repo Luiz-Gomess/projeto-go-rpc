@@ -28,6 +28,8 @@ func Snapshot(rl *RemoteList) {
 	}
 
 	fmt.Println("Snapshot created at ", time.Now())
+
+	removeLogFile()
 }
 
 // Recupera os dados das listas salvos no snapshot.json e em seguida os dados em logs.txt
@@ -38,6 +40,8 @@ func LoadData(rl *RemoteList) {
 		return
 	}
 	defer jsonFile.Close()
+	defer loadLogOperations(rl)
+	defer fmt.Println("Loading Operations...")
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
@@ -52,12 +56,6 @@ func LoadData(rl *RemoteList) {
 	}
 
 	fmt.Println("Content loaded!")
-	fmt.Println("Loading Operations...")
-
-	loadLogOperations(rl)
-
-	//TODO: Limpar o arquivo de logs após as operações já terem sido executadas
-
 }
 
 // Executa as operações salvas no arquivos de logs para recriar o estado das listas
@@ -95,8 +93,10 @@ func loadLogOperations(rl *RemoteList) {
 		}
 
 	}
-	fmt.Println("It worked!!")
+	fmt.Println("Operations loaded successfully!")
 	fmt.Println(rl.listsMap[1])
+
+	removeLogFile()
 
 }
 
@@ -127,4 +127,11 @@ func RegisterLog(operation string, listId int, value any) {
 	}
 	fmt.Printf("[INFO] Operation %s saved on %s at %s \n", operation, logs, time.Now().Format(time.RFC3339))
 
+}
+
+func removeLogFile() {
+	err := os.Remove(logs)
+	if err != nil {
+		fmt.Printf("Error removing file: %v \n", err)
+	}
 }

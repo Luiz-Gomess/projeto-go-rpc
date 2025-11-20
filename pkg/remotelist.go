@@ -6,7 +6,7 @@ import (
 )
 
 type RemoteList struct {
-	mu       sync.Mutex
+	Mu       sync.Mutex
 	listsMap map[int][]int
 }
 
@@ -26,6 +26,9 @@ func NewRemoteList() *RemoteList {
 	}
 }
 
+/*
+Método auxiliar para retornar a lista
+*/
 func (rl *RemoteList) getList(listId int) ([]int, error) {
 	list, exists := rl.listsMap[listId]
 
@@ -37,8 +40,8 @@ func (rl *RemoteList) getList(listId int) ([]int, error) {
 }
 
 func (rl *RemoteList) Append(args AppendArgs, reply *bool) error {
-	rl.mu.Lock()
-	defer rl.mu.Unlock()
+	rl.Mu.Lock()
+	defer rl.Mu.Unlock()
 
 	rl.listsMap[args.ListId] = append(rl.listsMap[args.ListId], args.Value)
 	*reply = true
@@ -48,8 +51,8 @@ func (rl *RemoteList) Append(args AppendArgs, reply *bool) error {
 }
 
 func (rl *RemoteList) Get(args GetArgs, reply_i *int) error {
-	rl.mu.Lock()
-	defer rl.mu.Unlock()
+	rl.Mu.Lock()
+	defer rl.Mu.Unlock()
 
 	list, _ := rl.getList(args.ListId)
 
@@ -62,8 +65,8 @@ func (rl *RemoteList) Get(args GetArgs, reply_i *int) error {
 }
 
 func (rl *RemoteList) Remove(listId int, reply_i *int) error {
-	rl.mu.Lock()
-	defer rl.mu.Unlock()
+	rl.Mu.Lock()
+	defer rl.Mu.Unlock()
 
 	list, _ := rl.getList(listId)
 
@@ -82,8 +85,8 @@ func (rl *RemoteList) Remove(listId int, reply_i *int) error {
 }
 
 func (rl *RemoteList) Size(listId int, reply_i *int) error {
-	rl.mu.Lock()
-	defer rl.mu.Unlock()
+	rl.Mu.Lock()
+	defer rl.Mu.Unlock()
 
 	list, _ := rl.getList(listId)
 

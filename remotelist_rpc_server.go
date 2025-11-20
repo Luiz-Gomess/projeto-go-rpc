@@ -25,7 +25,9 @@ func main() {
 	pkg.LoadData(list)
 
 	_, err := scheduler.Every(1).Minutes().Run(func() {
+		list.Mu.Lock()
 		pkg.Snapshot(list)
+		list.Mu.Unlock()
 	})
 
 	if err != nil {
