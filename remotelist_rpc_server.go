@@ -22,8 +22,10 @@ func main() {
 		fmt.Println("listen error:", e)
 	}
 
+	// Carrega o estado salvo das listas
 	pkg.LoadData(list)
 
+	// Cria o snapshot das listas a cada 1 minuto
 	_, err := scheduler.Every(1).Minutes().Run(func() {
 		list.Mu.Lock()
 		pkg.Snapshot(list)

@@ -27,7 +27,7 @@ func Snapshot(rl *RemoteList) {
 		panic(err)
 	}
 
-	fmt.Println("Snapshot created at ", time.Now())
+	fmt.Println("Snapshot created at ", time.Now().Format(time.DateTime))
 
 	removeLogFile()
 }
@@ -125,7 +125,7 @@ func RegisterLog(operation string, listId int, value any) {
 		fmt.Printf("Error appending to file: %v\n", err)
 		return
 	}
-	fmt.Printf("[INFO] Operation %s saved on %s at %s \n", operation, logs, time.Now().Format(time.RFC3339))
+	fmt.Printf("[INFO] Operation %s saved on %s at %s \n", operation, logs, time.Now().Format(time.DateTime))
 
 }
 
